@@ -30,14 +30,34 @@ def data_clean(df, metadados):
     logger.info(f'Saneamento concluído; {datetime.datetime.now()}')
     return df
 
+def flg_status(atraso):
+    if atraso > 0.5 : return "ATRASO"
+    else: return "ONTIME"
+
+def classifica_hora(hra):
+    if 0 <= hra < 6: return "MADRUGADA"
+    elif 6 <= hra < 12: return "MANHA"
+    elif 12 <= hra < 18: return "TARDE"
+    else: return "NOITE"
+
 def feat_eng(df):
     '''
     Função ???????????????????????????
     INPUT: ???????????????????????????
     OUTPUT: ???????????????????????????
     '''
+
+    df["tempo_voo_esperado"] = (df["datetime_chegada_formatted"] - df["datetime_partida_formatted"]) / pd.Timedelta(hours=1)
+    df["tempo_voo_hr"] = df["tempo_voo"] /60
+    df["atraso"] = df["tempo_voo_hr"] - df["tempo_voo_esperado"]
+    df["flg_status"] = df.loc[:,"atraso"].apply(lambda x: flg_status(x))
+    df["dia_semana"] = df["data_voo"].dt.day_of_week #0=segunda
+    df["horario"] = df.loc[:,"datetime_partida_formatted"].dt.hour.apply(lambda x: classifica_hora(x))
+
+
     #colocar log info
-    pass
+    logger.info(f'Adicionado novas colunas ; {datetime.datetime.now()}')
+    return df
 
 def save_data_sqlite(df):
     try:
