@@ -42,9 +42,9 @@ def classifica_hora(hra):
 
 def feat_eng(df):
     '''
-    Função ???????????????????????????
-    INPUT: ???????????????????????????
-    OUTPUT: ???????????????????????????
+    Função para novos campos
+    INPUT: dataframe
+    OUTPUT: dataframe
     '''
 
     df["tempo_voo_esperado"] = (df["datetime_chegada_formatted"] - df["datetime_partida_formatted"]) / pd.Timedelta(hours=1)
@@ -91,8 +91,8 @@ if __name__ == "__main__":
     df = data_clean(df, metadados)
     print(df.head())
     utils.null_check(df, metadados["null_tolerance"])
-    utils.keys_check(df, metadados["cols_chaves"])
+    utils.keys_check(df, ['companhia_formatted','datetime_partida_formatted', "id_voo",'datetime_chegada_formatted'])
     df = feat_eng(df)
-    #save_data_sqlite(df)
+    save_data_sqlite(df)
     fetch_sqlite_data(metadados["tabela"][0])
     logger.info(f'Fim da execução ; {datetime.datetime.now()}')
