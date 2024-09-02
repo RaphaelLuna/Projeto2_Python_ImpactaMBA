@@ -96,9 +96,9 @@ def null_check(df, null_tolerance):
             
 def keys_check(df, cols_chaves):
     '''
-    Função validar as chaves (colunas duplicadas)
+    Função de validação de chaves
     INPUT: dataframe e array de colunas
-    OUTPUT: sem retorno
+    OUTPUT: boolean
     '''
     len(df[cols_chaves].drop_duplicates()) == len(df)
 
